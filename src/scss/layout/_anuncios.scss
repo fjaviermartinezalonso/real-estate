@@ -1,0 +1,47 @@
+.contenedor-anuncios {
+    @include tablet {
+        display: flex;
+        column-gap: 2rem;
+    }
+}
+
+.anuncio {
+    background-color: lighten($gris, 5);
+    border: 1px solid darken($gris, 10);
+
+    .contenido-anuncio {
+        padding: 2rem;
+    }
+
+    h3, p {
+        margin: 0;
+    }
+
+    .precio {
+        color: $verde;
+        font-weight: bold;
+        font-size: 3rem;
+    }
+}
+
+.iconos-caracteristicas {
+    display: flex;
+    column-gap: 3rem;
+    justify-content: space-evenly;
+    list-style: none;
+    padding: 0 .5rem;
+
+    /* Si pongo fondo rojo al li se ve como el contenido se centra
+    alrededor del icono y no del párrafo. ¿Alguna forma de hacer esto
+    de forma limpia? */
+
+    li {
+        display: flex;
+        padding-right: 2rem;
+        gap: 1rem;
+
+        p {
+            font-weight: bold;
+        }
+    }
+}
