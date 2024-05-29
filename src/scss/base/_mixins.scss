@@ -31,6 +31,8 @@
     text-align: center;
     margin-top: calc($separacion / 2);
     display: $display;
+    border: none; // para los botones submit que tienen enlace
+    cursor: pointer;
 
     &:hover {
         background-color: darken($bgColor, 10%);

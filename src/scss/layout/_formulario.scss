@@ -1,0 +1,56 @@
+.form {
+    
+    legend {
+        font-size: 2rem;
+        color: $grisOscuro;
+    }
+    
+    label,
+    p {
+        text-transform: uppercase;
+        font-weight: $bold;
+        display: block;
+    }
+    p {
+        font-size: 1.6rem;
+        color: $grisOscuro;
+        margin: 2rem 0 0 0;
+    }
+    
+    input:not([type="submit"]),
+    textarea,
+    select {
+        padding: 1rem;
+        width: 100%;
+        border: 1px solid $gris;
+        border-radius: 1rem;
+        margin-bottom: 2rem;
+    }
+    textarea {
+        resize: none;
+        height: 14rem;
+    }
+    select {
+        width: auto;
+    }
+}
+
+.radio-option {
+    margin-left: 1rem;
+    display: flex;
+    gap: 1rem;
+
+    label {
+        text-transform: none;
+        font-weight: 400;
+    }
+
+    input[type="radio"] {
+        width: auto;
+        margin: 0;
+    }
+    
+    &:last-of-type {
+        margin-bottom: 2rem;
+    }
+}
