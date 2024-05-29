@@ -8,6 +8,7 @@
 .anuncio {
     background-color: lighten($gris, 5);
     border: 1px solid darken($gris, 10);
+    margin-bottom: 2rem;
 
     .contenido-anuncio {
         padding: 2rem;
@@ -17,11 +18,12 @@
         margin: 0;
     }
 
-    .precio {
-        color: $verde;
-        font-weight: bold;
-        font-size: 3rem;
-    }
+}
+
+.precio {
+    color: $verde;
+    font-weight: bold;
+    font-size: 3rem;
 }
 
 .iconos-caracteristicas {
@@ -30,6 +32,7 @@
     justify-content: space-evenly;
     list-style: none;
     padding: 0 .5rem;
+    max-width: 40rem;
 
     /* Si pongo fondo rojo al li se ve como el contenido se centra
     alrededor del icono y no del párrafo. ¿Alguna forma de hacer esto
