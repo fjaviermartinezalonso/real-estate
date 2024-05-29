@@ -1,5 +1,9 @@
 .contenedor-anuncios {
+
     @include tablet {
+        @include grid(2, 2rem);
+    }
+    @include desktop {
         @include grid(3, 2rem);
     }
 }
