@@ -18,14 +18,15 @@
 
     // Procesado de datos enviados por el usuario
     if($_SERVER["REQUEST_METHOD"] === "POST") {
-        $titulo = $_POST["titulo"];
-        $precio = $_POST["precio"];
-        //$imagen = $_POST["imagen"];
-        $descripcion = $_POST["descripcion"];
-        $habitaciones = $_POST["habitaciones"];
-        $baños = $_POST["baños"];
-        $estacionamientos = $_POST["estacionamientos"];
-        $vendedores_id = $_POST["vendedores_id"];
+        // Escapamos caracteres inválidos con PHP para evitar potenciales inyecciones SQL
+        $titulo = mysqli_real_escape_string($db, $_POST["titulo"]);
+        $precio = mysqli_real_escape_string($db, $_POST["precio"]);
+        //$imagen = mysqli_real_escape_string($db, $_POST["imagen"]);
+        $descripcion = mysqli_real_escape_string($db, $_POST["descripcion"]);
+        $habitaciones = mysqli_real_escape_string($db, $_POST["habitaciones"]);
+        $baños = mysqli_real_escape_string($db, $_POST["baños"]);
+        $estacionamientos = mysqli_real_escape_string($db, $_POST["estacionamientos"]);
+        $vendedores_id = mysqli_real_escape_string($db, $_POST["vendedores_id"]);
 
         if(!$titulo) {
             $errores[] = "Campo Título requerido";
