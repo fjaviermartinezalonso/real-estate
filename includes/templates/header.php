@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bienes raíces</title>
-    <link rel="stylesheet" href="build/css/app.css">
+    <link rel="stylesheet" href="/build/css/app.css">
 </head>
 <body>
     
@@ -12,7 +12,7 @@
         <div class="contenedor contenido-header">
             <div class="barra">
                 <a href="/index.php">
-                    <img src="build/img/logo.svg" alt="Logotipo de la empresa">
+                    <img src="/build/img/logo.svg" alt="Logotipo de la empresa">
                 </a>
                 <nav class="navegacion">
                     <a href="nosotros.php">Nosotros</a>
