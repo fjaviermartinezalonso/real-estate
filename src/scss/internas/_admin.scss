@@ -1,0 +1,8 @@
+.alerta {
+
+    &.error p{
+        background-color: $rojo;
+        padding: 0 1rem;
+        font-size: 1.5rem;
+    }
+}
