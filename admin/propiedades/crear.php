@@ -1,4 +1,69 @@
 <?php
+    require '../../includes/config/database.php';
+    $db = conectarDB();
+
+    $errores = [];
+
+    // Procesado de datos enviados por el usuario
+    if($_SERVER["REQUEST_METHOD"] === "POST") {
+        $titulo = $_POST["titulo"];
+        $precio = $_POST["precio"];
+        //$imagen = $_POST["imagen"];
+        $descripcion = $_POST["descripcion"];
+        $habitaciones = $_POST["habitaciones"];
+        $baños = $_POST["baños"];
+        $estacionamientos = $_POST["estacionamientos"];
+        $vendedores_id = $_POST["vendedores_id"];
+
+        if(!$titulo) {
+            $errores[] = "Campo Título requerido";
+        }
+        if(!$precio) {
+            $errores[] = "Campo Precio requerido";
+        }
+        if(!$descripcion) {
+            $errores[] = "Campo Descripción requerido";
+        }
+        if(strlen($descripcion) < 50) {
+            $errores[] = "La descripción requiere al menos 50 caracteres";
+        }
+        if(!$habitaciones) {
+            $errores[] = "Campo Habitaciones requerido";
+        }
+        if(($habitaciones < 0) || ($habitaciones > 9)) {
+            $errores[] = "El rango válido de Habitaciones es de 1 a 9";
+        }
+        if(!$baños) {
+            $errores[] = "Campo Baños requerido";
+        }
+        if(($baños < 0) || ($baños > 9)) {
+            $errores[] = "El rango válido de Baños es de 1 a 9";
+        }
+        if(!$estacionamientos) {
+            $errores[] = "Campo Estacionamientos requerido";
+        }
+        if(($estacionamientos < 0) || ($estacionamientos > 9)) {
+            $errores[] = "El rango válido de Estacionamientos es de 1 a 9";
+        }
+        if(!$vendedores_id) {
+            $errores[] = "Campo Vendedor requerido";
+        }
+
+        if(empty($errores)) {
+            // Insertar en la base de datos
+            $query = "
+                INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, baños, estacionamientos, vendedores_id) 
+                VALUES ( '$titulo', '$precio', '$descripcion', '$habitaciones', '$baños', '$estacionamientos', '$vendedores_id' )";
+
+            //echo $query;
+
+            $resultado = mysqli_query($db, $query);
+            if($resultado) {
+                echo "query creado OK";
+            }
+        }
+    }
+
     require '../../includes/funciones.php';
     incluirTemplate('header');
 ?>
@@ -8,25 +73,31 @@
 
         <a href="/admin" class="boton boton-verde">Volver</a>
 
-        <form action="" class="form">
+        <?php foreach($errores as $error): ?>
+        <div class="alerta error">
+            <p><?php echo $error; ?></p>
+        </div>
+        <?php endforeach; ?>
+
+        <form action="/admin/propiedades/crear.php" class="form" method="POST">
             <fieldset>
                 <legend>Información general</legend>
 
                 <p>
                     <label for="titulo">Título:</label>
-                    <input type="text" id="titulo" placeholder="Titulo propiedad">
+                    <input type="text" id="titulo" name="titulo" placeholder="Titulo propiedad">
                 </p>
                 <p>
                     <label for="precio">Precio:</label>
-                    <input type="number" id="precio" placeholder="Precio (€)">
+                    <input type="number" id="precio" name="precio" placeholder="Precio (€)">
                 </p>
                 <p>
                     <label for="imagen">Imagen:</label>
-                    <input type="file" id="imagen" accept="image/jpeg, image/png">
+                    <input type="file" id="imagen" name="imagen" accept="image/jpeg, image/png">
                 </p>
                 <p>
                     <label for="descripcion">Descripción:</label>
-                    <textarea id="descripcion"> </textarea>
+                    <textarea id="descripcion" name="descripcion"> </textarea>
                 </p>
             </fieldset>
             
@@ -35,21 +106,22 @@
  
                 <p>
                      <label for="habitaciones">Habitaciones:</label>
-                     <input type="number" id="habitaciones" placeholder="Ej. 3" min="1" max="9">
+                     <input type="number" id="habitaciones" name="habitaciones" placeholder="Ej. 3" min="1" max="9">
                  </p>
                 <p>
-                     <label for="wc">Baños:</label>
-                     <input type="number" id="wc" placeholder="Ej. 3" min="1" max="9">
+                     <label for="baños">Baños:</label>
+                     <input type="number" id="baños" name="baños" placeholder="Ej. 3" min="1" max="9">
                  </p>
                 <p>
                      <label for="estacionamientos">Estacionamientos:</label>
-                     <input type="number" id="estacionamientos" placeholder="Ej. 3" min="1" max="9">
+                     <input type="number" id="estacionamientos" name="estacionamientos" placeholder="Ej. 3" min="1" max="9">
                  </p>
             </fieldset>
 
             <fieldset>
                 <legend>Vendedor</legend>
-                <select name="" id="">
+                <select name="vendedores_id" id="vendedores_id">
+                    <option value="" disabled selected>-- Seleccione --</option>
                     <option value="1">Julián</option>
                     <option value="2">Andrea</option>
                 </select>
