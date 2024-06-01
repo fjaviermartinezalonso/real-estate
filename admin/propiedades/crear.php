@@ -2,6 +2,10 @@
     require '../../includes/config/database.php';
     $db = conectarDB();
 
+    // Leer base de datos
+    $query = "SELECT id, nombre, apellido FROM vendedores";
+    $vendedores = mysqli_query($db, $query);
+
     $errores = [];
     $titulo = '';
     $precio = '';
@@ -58,16 +62,27 @@
         }
 
         if(empty($errores)) {
+            $creado = date("Y/m/d");
+
             // Insertar en la base de datos
             $query = "
-                INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, baños, estacionamientos, vendedores_id) 
-                VALUES ( '$titulo', '$precio', '$descripcion', '$habitaciones', '$baños', '$estacionamientos', '$vendedores_id' )";
-
-            //echo $query;
+                INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, baños, estacionamientos, creado, vendedores_id) 
+                VALUES ( '$titulo', '$precio', '$descripcion', '$habitaciones', '$baños', '$estacionamientos', '$creado', '$vendedores_id' )";
 
             $resultado = mysqli_query($db, $query);
             if($resultado) {
-                echo "query creado OK";
+                // Redireccionamos al usuario
+                //header("Location: /admin");
+
+                // Limpiamos campos antes de pintar mensaje de exito en verde
+                $titulo = '';
+                $precio = '';
+                //$image = '';
+                $descripcion = '';
+                $habitaciones = '';
+                $baños = '';
+                $estacionamientos = '';
+                $vendedores_id = '';
             }
         }
     }
@@ -78,6 +93,12 @@
 
     <main class="contenedor seccion">
         <h1>Crear</h1>
+
+        <?php if($resultado) {?>
+            <div class="alerta exito">
+                <p>Propiedad creada con éxito.</p>
+            </div>
+        <?php } ?>
 
         <a href="/admin" class="boton boton-verde">Volver</a>
 
@@ -130,8 +151,11 @@
                 <legend>Vendedor</legend>
                 <select name="vendedores_id" id="vendedores_id" value="<?php echo $vendedores_id?>">
                     <option value="" disabled selected>-- Seleccione --</option>
-                    <option value="1">Julián</option>
-                    <option value="2">Andrea</option>
+                    
+                    <?php while($row = mysqli_fetch_assoc($vendedores)) { ?>
+                        <option <?php echo $vendedores_id === $row["id"]? "selected" : "" ?> value="<?php echo $row["id"]; ?>"> <?php echo $row["nombre"] . " " . $row["apellido"]; ?> </option>
+                    <?php } ?>
+                    
                 </select>
             </fieldset>
 

@@ -1,8 +1,14 @@
 .alerta {
 
-    &.error p{
-        background-color: $rojo;
+    p {
         padding: 0 1rem;
         font-size: 1.5rem;
+    }
+    
+    &.error {
+        background-color: $rojo;
+    }
+    &.exito {
+        background-color: $verde;
     }
 }
