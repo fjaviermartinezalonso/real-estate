@@ -9,7 +9,7 @@
     $errores = [];
     $titulo = '';
     $precio = '';
-    //$image = '';
+    $image = '';
     $descripcion = '';
     $habitaciones = '';
     $baños = '';
@@ -21,7 +21,7 @@
         // Escapamos caracteres inválidos con PHP para evitar potenciales inyecciones SQL
         $titulo = mysqli_real_escape_string($db, $_POST["titulo"]);
         $precio = mysqli_real_escape_string($db, $_POST["precio"]);
-        //$imagen = mysqli_real_escape_string($db, $_POST["imagen"]);
+        $imagen = $_FILES["imagen"];
         $descripcion = mysqli_real_escape_string($db, $_POST["descripcion"]);
         $habitaciones = mysqli_real_escape_string($db, $_POST["habitaciones"]);
         $baños = mysqli_real_escape_string($db, $_POST["baños"]);
@@ -33,6 +33,15 @@
         }
         if(!$precio) {
             $errores[] = "Campo Precio requerido";
+        }
+        if(!$imagen["name"]) {
+            $errores[] = "Campo Imagen requerido";
+        }
+        if($imagen["error"]) {
+            $errores[] = "Ha sucedido un error al subir la imagen";
+        }
+        if($imagen["size"] > 1000000) { // limitamos 1MB tamaño maximo
+            $errores[] = "El tamaño máximo de imagen es de 100Kb";
         }
         if(!$descripcion) {
             $errores[] = "Campo Descripción requerido";
@@ -65,20 +74,36 @@
         if(empty($errores)) {
             $creado = date("Y/m/d");
 
+            // Subida de archivos
+            $imageFolder = "../../images/";
+            // Comprobar si existe la carpeta y si no la crea
+            if(!is_dir($imageFolder)) {
+                mkdir($imageFolder);
+            }
+            // Gestionar subida
+            $imageExtension = ($imagen["type"] === "image/jpeg")? ".jpg" : ".png"; // solo permitimos subir estos dos formatos
+            $imageIdentifier = md5(uniqid(rand() , true)) . $imageExtension;
+            move_uploaded_file($imagen["tmp_name"], $imageFolder . $imageIdentifier);
+
             // Insertar en la base de datos
             $query = "
-                INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, baños, estacionamientos, creado, vendedores_id) 
-                VALUES ( '$titulo', '$precio', '$descripcion', '$habitaciones', '$baños', '$estacionamientos', '$creado', '$vendedores_id' )";
+                INSERT INTO propiedades (titulo, precio, imagen, descripcion, habitaciones, baños, estacionamientos, creado, vendedores_id) 
+                VALUES ( '$titulo', '$precio', '$imageIdentifier', '$descripcion', '$habitaciones', '$baños', '$estacionamientos', '$creado', '$vendedores_id' )";
 
             $resultado = mysqli_query($db, $query);
             if($resultado) {
                 // Redireccionamos al usuario
                 //header("Location: /admin");
+                /*Opcionalmente podría pasarle como parámetro un mensaje a mostrar, por ejemplo:
+                "Location: /admin&mensaje=Propiedad creada con éxito". Luego tendría que leer
+                dicho parámetro con GET: $mensaje = $_GET["mensaje"] ?? null;
+                En caso de que al acceder a la URL no haya GET (por ejemplo al acceder por primera
+                vez), "?? null" inicializa a null la variable $mensaje */
 
                 // Limpiamos campos antes de pintar mensaje de exito en verde
                 $titulo = '';
                 $precio = '';
-                //$image = '';
+                $image = '';
                 $descripcion = '';
                 $habitaciones = '';
                 $baños = '';
@@ -109,7 +134,7 @@
         </div>
         <?php endforeach; ?>
 
-        <form action="/admin/propiedades/crear.php" class="form" method="POST">
+        <form action="/admin/propiedades/crear.php" class="form" method="POST" enctype="multipart/form-data">
             <fieldset>
                 <legend>Información general</legend>
 
