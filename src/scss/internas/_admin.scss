@@ -12,3 +12,37 @@
         background-color: $verde;
     }
 }
+
+table.propiedades {
+    margin-top: 4rem;
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+
+    th {
+        background-color: $verde;
+        color: $blanco;
+    }
+
+    tbody tr:nth-child(odd) {
+        background-color: $blanco;
+    }
+    tbody tr:nth-child(even) {
+        background-color: $gris;
+    }
+
+    th,
+    td {
+        padding: 2rem;
+    }
+
+    td img {
+        width: 20rem;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .boton-amarillo-block {
+        margin-top: 0;
+    }
+}
