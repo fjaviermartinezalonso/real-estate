@@ -32,11 +32,11 @@
                 <tr>
                     <td> <?php echo $propiedad["id"] ?> </td>
                     <td> <?php echo $propiedad["titulo"] ?> </td>
-                    <td> <img src="/images/" <?php echo $propiedad["imagen"] ?> alt="imagen propiedad"></td>
+                    <td> <img src="/images/<?php echo $propiedad["imagen"] ?>" alt="imagen propiedad"></td>
                     <td> <?php echo $propiedad["precio"] ?>€ </td>
                     <td>
-                        <a href="" class="boton-amarillo-block">Actualizar</a>
-                        <a href="" class="boton-rojo-block">Eliminar</a>
+                        <a href="admin/propiedades/actualizar.php?id=<?php echo $propiedad["id"]?>" class="boton-amarillo-block">Actualizar</a>
+                        <a href="admin/propiedades/borrar.php" class="boton-rojo-block">Eliminar</a>
                     </td>
                 </tr>
                 <?php } ?>

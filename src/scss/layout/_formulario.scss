@@ -33,6 +33,12 @@
     select {
         width: auto;
     }
+    
+    img {
+        font-weight: 400;
+        text-transform: capitalize;
+        width: 20rem;
+    }
 }
 
 .radio-option {
