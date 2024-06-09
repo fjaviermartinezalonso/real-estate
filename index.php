@@ -26,101 +26,20 @@
 
     <section class="seccion contenedor">
         <h2>Casas y apartamentos en venta</h2>
-        <div class="contenedor-anuncios">
-            <div class="anuncio">
-                <picture>
-                    <source srcset="build/img/anuncio1.webp" type="image/webp">
-                    <source srcset="build/img/anuncio1.jpeg" type="image/jpeg">
-                    <img src="build/img/anuncio1.jpg" alt="" loading="lazy">
-                </picture>
-                <div class="contenido-anuncio">
-                    <h3>Casa de lujo en el lago</h3>
-                    <p>Casa en el lago con excelente vista, acabados de lujo a buen precio.</p>
-                    <p class="precio">800.000€</p>
-                    <ul class="iconos-caracteristicas">
-                        <li>
-                            <img src="build/img/icono_wc.svg" alt="Icono WC" loading="lazy">
-                            <p>3</p>
-                        </li>
-                        <li>
-                            <img src="build/img/icono_estacionamiento.svg" alt="Icono estacionamiento" loading="lazy">
-                            <p>3</p>
-                        </li>
-                        <li>
-                            <img src="build/img/icono_dormitorio.svg" alt="Icono dormitorio" loading="lazy">
-                            <p>4</p>
-                        </li>
-                    </ul> <!-- .iconos-caracteristicas -->
-                    <a href="anuncio.html" class="boton-amarillo-block">Ver anuncio</a>
-                </div> <!-- .contenido-anuncio -->
-            </div> <!-- .anuncio -->
-
-            <div class="anuncio">
-                <picture>
-                    <source srcset="build/img/anuncio2.webp" type="image/webp">
-                    <source srcset="build/img/anuncio2.jpeg" type="image/jpeg">
-                    <img src="build/img/anuncio2.jpg" alt="" loading="lazy">
-                </picture>
-                <div class="contenido-anuncio">
-                    <h3>Casa con acabados de lujo</h3>
-                    <p>Casa en el lago con excelente vista, acabados de lujo a buen precio.</p>
-                    <p class="precio">800.000€</p>
-                    <ul class="iconos-caracteristicas">
-                        <li>
-                            <img src="build/img/icono_wc.svg" alt="Icono WC" loading="lazy">
-                            <p>3</p>
-                        </li>
-                        <li>
-                            <img src="build/img/icono_estacionamiento.svg" alt="Icono estacionamiento" loading="lazy">
-                            <p>3</p>
-                        </li>
-                        <li>
-                            <img src="build/img/icono_dormitorio.svg" alt="Icono dormitorio" loading="lazy">
-                            <p>4</p>
-                        </li>
-                    </ul> <!-- .iconos-caracteristicas -->
-                    <a href="anuncio.html" class="boton-amarillo-block">Ver anuncio</a>
-                </div> <!-- .contenido-anuncio -->
-            </div> <!-- .anuncio -->
-
-            <div class="anuncio">
-                <picture>
-                    <source srcset="build/img/anuncio3.webp" type="image/webp">
-                    <source srcset="build/img/anuncio3.jpeg" type="image/jpeg">
-                    <img src="build/img/anuncio3.jpg" alt="" loading="lazy">
-                </picture>
-                <div class="contenido-anuncio">
-                    <h3>Casa de lujo con piscina</h3>
-                    <p>Casa en el lago con excelente vista, acabados de lujo a buen precio.</p>
-                    <p class="precio">800.000€</p>
-                    <ul class="iconos-caracteristicas">
-                        <li>
-                            <img src="build/img/icono_wc.svg" alt="Icono WC" loading="lazy">
-                            <p>3</p>
-                        </li>
-                        <li>
-                            <img src="build/img/icono_estacionamiento.svg" alt="Icono estacionamiento" loading="lazy">
-                            <p>3</p>
-                        </li>
-                        <li>
-                            <img src="build/img/icono_dormitorio.svg" alt="Icono dormitorio" loading="lazy">
-                            <p>4</p>
-                        </li>
-                    </ul> <!-- .iconos-caracteristicas -->
-                    <a href="anuncio.html" class="boton-amarillo-block">Ver anuncio</a>
-                </div> <!-- .contenido-anuncio -->
-            </div> <!-- .anuncio -->
-        </div>
+        <?php 
+        $limite = 3;
+        require 'includes/templates/anuncios.php';
+        ?>
 
         <div class="alinear-derecha">
-            <a href="anuncios.html" class="boton-verde">Ver todo</a>
+            <a href="/anuncios.html" class="boton-verde">Ver todo</a>
         </div>
     </section>
 
     <section class="imagen-contacto">
         <h2>Encuentra la casa de tus sueños</h2>
         <p>Llena el formulario y un asesor se pondrá en contacto contigo.</p>
-        <a href="contacto.html" class="boton-amarillo">Contáctanos</a>
+        <a href="/contacto.html" class="boton-amarillo">Contáctanos</a>
     </section>
 
     <div class="contenedor seccion seccion-inferior">
@@ -135,7 +54,7 @@
                     </picture>
                 </div>
                 <div class="texto-entrada">
-                    <a href="entrada.html">
+                    <a href="/entrada.html">
                         <h4>Terraza en la azotea de tu casa</h4>
                         <p class="meta-info">Escrito el: <span>20/10/2023</span> por <span>Admin</span></p>
                         <p>Consejos para construir una terraza en la azotea de tu casa con los mejores materiales y ahorrando dinero.</p>
@@ -151,7 +70,7 @@
                     </picture>
                 </div>
                 <div class="texto-entrada">
-                    <a href="entrada.html">
+                    <a href="/entrada.html">
                         <h4>Guía para la decoración de tu hogar</h4>
                         <p class="meta-info">Escrito el: <span>20/10/2023</span> por <span>Admin</span></p>
                         <p>Maximiza el espacio en tu hogar con esta guía. Aprende a combinar muebles y colores para darle vida a tu casa.</p>
