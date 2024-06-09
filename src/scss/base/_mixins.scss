@@ -33,6 +33,7 @@
     display: $display;
     border: none; // para los botones submit que tienen enlace
     cursor: pointer;
+    line-height: inherit;
 
     &:hover {
         background-color: darken($bgColor, 10%);
