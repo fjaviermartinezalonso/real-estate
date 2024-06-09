@@ -54,7 +54,7 @@
                     <td> <img src="/images/<?php echo $propiedad["imagen"] ?>" alt="imagen propiedad"></td>
                     <td> <?php echo $propiedad["precio"] ?>€ </td>
                     <td>
-                        <a href="admin/propiedades/actualizar.php?id=<?php echo $propiedad["id"]?>" class="boton-amarillo-block">Actualizar</a>
+                        <a href="/admin/propiedades/actualizar.php?id=<?php echo $propiedad["id"]?>" class="boton-amarillo-block">Actualizar</a>
                         <form method="POST">
                             <input type="hidden" name="id" value="<?php echo $propiedad["id"]; ?>">
                             <button type="submit" class="boton-rojo-block w-100">Eliminar</a>
