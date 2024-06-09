@@ -152,7 +152,7 @@
                 </p>
                 <p>
                     <label for="descripcion">Descripción:</label>
-                    <textarea id="descripcion" name="descripcion"> <?php echo $descripcion?> </textarea>
+                    <textarea id="descripcion" name="descripcion"><?php echo $descripcion?></textarea>
                 </p>
             </fieldset>
             
