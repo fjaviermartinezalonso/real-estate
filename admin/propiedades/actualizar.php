@@ -21,8 +21,6 @@
     $precio = $propiedad["precio"];
     $imagenDB = $propiedad["imagen"];
 
-echo $imagenDB;
-
     $imagen = ''; // por seguridad no mostramos donde se alojan las imagenes en el server
     $descripcion = $propiedad["descripcion"];
     $habitaciones = $propiedad["habitaciones"];
