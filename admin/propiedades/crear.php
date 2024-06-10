@@ -1,4 +1,10 @@
 <?php
+    // Enviamos a la raíz si el admin no inició sesión
+    require '../../includes/funciones.php';
+    if(!usuarioAutenticado()) {
+        header("location: /");
+    }
+
     require '../../includes/config/database.php';
     $db = conectarDB();
 
@@ -113,7 +119,6 @@
         }
     }
 
-    require '../../includes/funciones.php';
     incluirTemplate('header');
 ?>
 

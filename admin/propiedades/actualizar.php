@@ -1,4 +1,9 @@
 <?php
+    // Enviamos a la raíz si el admin no inició sesión
+    require '../../includes/funciones.php';
+    if(!usuarioAutenticado()) {
+        header("location: /");
+    }
 
     // Validacion de identificador de propiedad
     $id = filter_var($_GET["id"], FILTER_VALIDATE_INT);
@@ -108,7 +113,6 @@
         }
     }
 
-    require '../../includes/funciones.php';
     incluirTemplate('header');
 ?>
 
