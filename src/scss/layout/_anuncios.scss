@@ -1,11 +1,7 @@
 .contenedor-anuncios {
-
-    @include tablet {
-        @include grid(2, 2rem);
-    }
-    @include desktop {
-        @include grid(3, 2rem);
-    }
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
 .anuncio {
@@ -16,7 +12,8 @@
         padding: 2rem;
     }
 
-    h3, p {
+    h3,
+    p {
         margin: 0;
     }
 
