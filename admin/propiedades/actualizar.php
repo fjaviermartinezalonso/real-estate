@@ -1,9 +1,8 @@
 <?php
     // Enviamos a la raíz si el admin no inició sesión
     require '../../includes/app.php';
-    if(!usuarioAutenticado()) {
-        header("location: /");
-    }
+    
+    autenticarUsuario();
 
     // Validacion de identificador de propiedad
     $id = filter_var($_GET["id"], FILTER_VALIDATE_INT);

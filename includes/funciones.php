@@ -7,11 +7,16 @@ function incluirTemplate(string $nombre, bool $inicio = false) {
     include TEMPLATES_URL . "/$nombre.php";
 }
 
-function usuarioAutenticado() : bool {
+function autenticarUsuario() {
     session_start();
     // Enviamos a la raíz si el admin no inició sesión
-    if($_SESSION["login"]) {
-        return true;
+    if(!$_SESSION["login"]) {
+        header("location: /");
     }
-    return false;
+}
+
+function debugVar($var) {
+    echo "<pre>";
+    var_dump($var);
+    echo "</pre>";
 }

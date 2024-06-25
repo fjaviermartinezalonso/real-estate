@@ -1,10 +1,11 @@
 <?php
     // Enviamos a la raíz si el admin no inició sesión
     require '../../includes/app.php';
-    if(!usuarioAutenticado()) {
-        header("location: /");
-    }
+    use App\Propiedad;
 
+    $propiedad = new Propiedad;
+
+    autenticarUsuario();
     $db = conectarDB();
 
     // Leer base de datos
