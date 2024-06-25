@@ -5,8 +5,8 @@
     if(!$id) {
         header("location: /");
     }
-
-    require './includes/config/database.php';
+    
+    require 'includes/app.php';
     $db = conectarDB();
 
     // Leer base de datos
@@ -19,7 +19,6 @@
     }    
     $propiedad = mysqli_fetch_assoc($res);
 
-    require 'includes/funciones.php';
     incluirTemplate('header');
 ?>
 

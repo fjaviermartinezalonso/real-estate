@@ -1,6 +1,6 @@
 <?php
     // Autenticación de usuario
-    require "includes/config/database.php";
+    require 'includes/app.php';
     $db = conectarDB();
 
     $errores = [];
@@ -42,7 +42,6 @@
         }
     }
 
-    require 'includes/funciones.php';
     incluirTemplate('header');
 ?>
 

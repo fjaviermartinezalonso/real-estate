@@ -1,6 +1,6 @@
 <?php
     // Enviamos a la raíz si el admin no inició sesión
-    require '../../includes/funciones.php';
+    require '../../includes/app.php';
     if(!usuarioAutenticado()) {
         header("location: /");
     }
@@ -11,7 +11,6 @@
         header("Location: /admin");
     }
 
-    require '../../includes/config/database.php';
     $db = conectarDB();
 
     // Leer base de datos
