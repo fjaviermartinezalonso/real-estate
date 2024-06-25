@@ -8,7 +8,9 @@
             "email": "54067143+fjaviermartinezalonso@users.noreply.github.com"
         }
     ],
-    "require": {},
+    "require": {
+        "intervention/image": "^3.7"
+    },
     "autoload": {
         "psr-4": {
             "App\\": "./classes"

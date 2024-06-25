@@ -2,8 +2,8 @@
     // Enviamos a la raíz si el admin no inició sesión
     require '../../includes/app.php';
     use App\Propiedad;
-
-    $propiedad = new Propiedad;
+    use Intervention\Image\ImageManager;
+    use Intervention\Image\Drivers\Imagick\Driver;
 
     autenticarUsuario();
     $db = conectarDB();
@@ -12,7 +12,7 @@
     $query = "SELECT id, nombre, apellido FROM vendedores";
     $vendedores = mysqli_query($db, $query);
 
-    $errores = [];
+    $errores = Propiedad::getErrores();
     $titulo = '';
     $precio = '';
     $image = '';
@@ -24,79 +24,28 @@
 
     // Procesado de datos enviados por el usuario
     if($_SERVER["REQUEST_METHOD"] === "POST") {
-        // Escapamos caracteres inválidos con PHP para evitar potenciales inyecciones SQL
-        $titulo = mysqli_real_escape_string($db, $_POST["titulo"]);
-        $precio = mysqli_real_escape_string($db, $_POST["precio"]);
-        $imagen = $_FILES["imagen"];
-        $descripcion = mysqli_real_escape_string($db, $_POST["descripcion"]);
-        $habitaciones = mysqli_real_escape_string($db, $_POST["habitaciones"]);
-        $baños = mysqli_real_escape_string($db, $_POST["baños"]);
-        $estacionamientos = mysqli_real_escape_string($db, $_POST["estacionamientos"]);
-        $vendedores_id = mysqli_real_escape_string($db, $_POST["vendedores_id"]);
 
-        if(!$titulo) {
-            $errores[] = "Campo Título requerido";
-        }
-        if(!$precio) {
-            $errores[] = "Campo Precio requerido";
-        }
-        if(!$imagen["name"]) {
-            $errores[] = "Campo Imagen requerido";
-        }
-        if($imagen["error"]) {
-            $errores[] = "Ha sucedido un error al subir la imagen";
-        }
-        if($imagen["size"] > 1000000) { // limitamos 1MB tamaño maximo
-            $errores[] = "El tamaño máximo de imagen es de 100Kb";
-        }
-        if(!$descripcion) {
-            $errores[] = "Campo Descripción requerido";
-        }
-        if(strlen($descripcion) < 50) {
-            $errores[] = "La descripción requiere al menos 50 caracteres";
-        }
-        if(!$habitaciones) {
-            $errores[] = "Campo Habitaciones requerido";
-        }
-        if(($habitaciones < 0) || ($habitaciones > 9)) {
-            $errores[] = "El rango válido de Habitaciones es de 1 a 9";
-        }
-        if(!$baños) {
-            $errores[] = "Campo Baños requerido";
-        }
-        if(($baños < 0) || ($baños > 9)) {
-            $errores[] = "El rango válido de Baños es de 1 a 9";
-        }
-        if(!$estacionamientos) {
-            $errores[] = "Campo Estacionamientos requerido";
-        }
-        if(($estacionamientos < 0) || ($estacionamientos > 9)) {
-            $errores[] = "El rango válido de Estacionamientos es de 1 a 9";
-        }
-        if(!$vendedores_id) {
-            $errores[] = "Campo Vendedor requerido";
-        }
+        $propiedad = new Propiedad($_POST);
+
+        // Crear identificador unico para la imagen
+        $imagen = $_FILES["imagen"];
+        $imageExtension = ($imagen["type"] === "image/jpeg")? ".jpg" : ".png"; // solo permitimos subir estos dos formatos
+        $imageIdentifier = md5(uniqid(rand() , true)) . $imageExtension;
+        $propiedad->setImage($imageIdentifier);
+
+        $propiedad->validarCampos();
+        $errores = Propiedad::getErrores();
 
         if(empty($errores)) {
-            $creado = date("Y/m/d");
-
-            // Subida de archivos
-            $imageFolder = "../../images/";
             // Comprobar si existe la carpeta y si no la crea
-            if(!is_dir($imageFolder)) {
-                mkdir($imageFolder);
+            if(!is_dir(IMAGENES_URL)) {
+                mkdir(IMAGENES_URL);
             }
-            // Gestionar subida
-            $imageExtension = ($imagen["type"] === "image/jpeg")? ".jpg" : ".png"; // solo permitimos subir estos dos formatos
-            $imageIdentifier = md5(uniqid(rand() , true)) . $imageExtension;
-            move_uploaded_file($imagen["tmp_name"], $imageFolder . $imageIdentifier);
+            // Resize a la imagen con Intervention y subida al servidor
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($_FILES["imagen"]["tmp_name"])->resize(800,600)->save(IMAGENES_URL . $imageIdentifier);
 
-            // Insertar en la base de datos
-            $query = "
-                INSERT INTO propiedades (titulo, precio, imagen, descripcion, habitaciones, baños, estacionamientos, creado, vendedores_id) 
-                VALUES ( '$titulo', '$precio', '$imageIdentifier', '$descripcion', '$habitaciones', '$baños', '$estacionamientos', '$creado', '$vendedores_id' )";
-
-            $resultado = mysqli_query($db, $query);
+            $resultado = $propiedad->create();
             if($resultado) {
                 // Redireccionamos al usuario
                 //header("Location: /admin");
