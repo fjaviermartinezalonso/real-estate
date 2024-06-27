@@ -38,12 +38,24 @@ class Propiedad {
             $atributos = $this->sanitize($this->atributos());
 
             // Insertar en la base de datos
-            $query = "INSERT INTO propiedades (";
-            $query .= join(", ", array_keys($atributos));
-            $query .= ") VALUES ('";
-            $query .= join("', '", array_values($atributos));
-            $query .= "')";
-            return self::$db->query($query);
+            if(isset($this->id)) { // UPDATE
+                $sets = [];
+                foreach($atributos as $key => $value) {
+                    $sets[] = "$key = '$value'";
+                }
+                $query = "UPDATE propiedades SET ";
+                $query .= join(", ", $sets);
+                $query .= " WHERE id = '$this->id'";
+                return self::$db->query($query);
+            }
+            else { // CREATE
+                $query = "INSERT INTO propiedades (";
+                $query .= join(", ", array_keys($atributos));
+                $query .= ") VALUES ('";
+                $query .= join("', '", array_values($atributos));
+                $query .= "')";
+                return self::$db->query($query);
+            }
         }
 
         public static function setDB($database) {
@@ -111,6 +123,14 @@ class Propiedad {
         }
 
         public function setImage($image) {
+            // Elimina imagen previa si se esta actualizando (hay id)
+            if(isset($this->id)) {
+                $url_imagen = IMAGENES_URL . $this->imagen;
+                if(file_exists($url_imagen)) {
+                    unlink($url_imagen);
+                }
+            }
+
             if($image) {
                 $this->imagen = $image;
             }

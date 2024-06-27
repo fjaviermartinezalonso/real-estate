@@ -2,6 +2,8 @@
     // Enviamos a la raíz si el admin no inició sesión
     require '../../includes/app.php';
     use App\Propiedad;
+    use Intervention\Image\ImageManager;
+    use Intervention\Image\Drivers\Imagick\Driver;
 
     autenticarUsuario();
 
@@ -11,56 +13,44 @@
         header("Location: /admin");
     }
 
-    $db = conectarDB();
-
     // Leer base de datos
     $propiedad = Propiedad::find($id);
-
+    $errores = Propiedad::getErrores();
+    
+    $db = conectarDB();
     $query = "SELECT id, nombre, apellido FROM vendedores";
     $vendedores = mysqli_query($db, $query);
 
-    $errores = Propiedad::getErrores();
-
     // Procesado de datos enviados por el usuario
     if($_SERVER["REQUEST_METHOD"] === "POST") {
+        debugVar($_FILES["propiedad"]);
 
         // Asignar los atributos que han cambiado
         $args = $_POST["propiedad"];
         $propiedad->sincronizar($args);
+
+        // Crear identificador unico para la imagen
+        $imagen = $_FILES["propiedad"]["tmp_name"]["imagen"];
+        $imageExtension = ($_FILES["propiedad"]["type"]["imagen"] === "image/jpeg")? ".jpg" : ".png"; // solo permitimos subir estos dos formatos
+        $imageIdentifier = md5(uniqid(rand() , true)) . $imageExtension;
+        $imagenDB = $imageIdentifier; // para actualizar la imagen mas abajo
+        $propiedad->setImage($imageIdentifier);
+
         $propiedad->validarCampos();
         $errores = Propiedad::getErrores();
 
-        debugVar($propiedad);
-        debugVar($errores);
-
         if(empty($errores)) {
             // Comprobar si existe la carpeta y si no la crea
-            // $imageFolder = "../../images/";
-            // if(!is_dir($imageFolder)) {
-            //     mkdir($imageFolder);
-            // }
+            if(!is_dir(IMAGENES_URL)) {
+                mkdir(IMAGENES_URL);
+            }
 
-            // // Borrar imagen previa si la hay
-            // if($imagen["name"]) {
-            //     unlink($imageFolder . $imagenDB);
+            // Resize a la imagen con Intervention y subida al servidor
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($_FILES["propiedad"]["tmp_name"]["imagen"])->resize(800,600)->save(IMAGENES_URL . $imageIdentifier);
 
-            //     // Gestionar subida
-            //     $imageExtension = ($imagen["type"] === "image/jpeg")? ".jpg" : ".png"; // solo permitimos subir estos dos formatos
-            //     $imageIdentifier = md5(uniqid(rand() , true)) . $imageExtension;
-            //     move_uploaded_file($imagen["tmp_name"], $imageFolder . $imageIdentifier);
-            // }
-            // else {
-            //     $imageIdentifier = $imagenDB; // para actualizar con la misma imagen
-            // }
-
-            // $creado = date("Y/m/d");
-            
-            // // Insertar en la base de datos
-            // $query = "
-            //     UPDATE propiedades SET titulo = '$titulo', precio = $precio, imagen = '$imageIdentifier', descripcion = '$descripcion', habitaciones = $habitaciones, baños = $baños, estacionamientos = $estacionamientos, vendedores_id = $vendedores_id WHERE id = $id";
-
-            // $resultado = mysqli_query($db, $query);
-            // $imagenDB = $imageIdentifier; // para actualizar la imagen mas abajo
+            // Insertar en la base de datos
+            $resultado = $propiedad->create();
         }
     }
 
