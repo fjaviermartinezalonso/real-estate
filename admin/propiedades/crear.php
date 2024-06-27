@@ -13,14 +13,6 @@
     $vendedores = mysqli_query($db, $query);
 
     $errores = Propiedad::getErrores();
-    $titulo = '';
-    $precio = '';
-    $image = '';
-    $descripcion = '';
-    $habitaciones = '';
-    $baños = '';
-    $estacionamientos = '';
-    $vendedores_id = '';
 
     // Procesado de datos enviados por el usuario
     if($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -45,25 +37,10 @@
             $manager = new ImageManager(new Driver());
             $image = $manager->read($_FILES["imagen"]["tmp_name"])->resize(800,600)->save(IMAGENES_URL . $imageIdentifier);
 
-            $resultado = $propiedad->create();
-            if($resultado) {
-                // Redireccionamos al usuario
-                //header("Location: /admin");
-                /*Opcionalmente podría pasarle como parámetro un mensaje a mostrar, por ejemplo:
-                "Location: /admin&mensaje=Propiedad creada con éxito". Luego tendría que leer
-                dicho parámetro con GET: $mensaje = $_GET["mensaje"] ?? null;
-                En caso de que al acceder a la URL no haya GET (por ejemplo al acceder por primera
-                vez), "?? null" inicializa a null la variable $mensaje */
-
-                // Limpiamos campos antes de pintar mensaje de exito en verde
-                $titulo = '';
-                $precio = '';
-                $image = '';
-                $descripcion = '';
-                $habitaciones = '';
-                $baños = '';
-                $estacionamientos = '';
-                $vendedores_id = '';
+            $exito = $propiedad->create();
+            // Limpiamos campos antes de pintar mensaje de exito en verde
+            if($exito) {
+                $propiedad = new Propiedad();
             }
         }
     }
@@ -74,7 +51,7 @@
     <main class="contenedor seccion">
         <h1>Crear</h1>
 
-        <?php if($resultado) {?>
+        <?php if($exito) {?>
             <div class="alerta exito">
                 <p>Propiedad creada con éxito.</p>
             </div>
