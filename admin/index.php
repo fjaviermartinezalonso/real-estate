@@ -1,13 +1,14 @@
 <?php
     // Enviamos a la raíz si el admin no inició sesión
     require '../includes/app.php';
-    
+    use App\Propiedad;
+
     autenticarUsuario();
+    
     $db = conectarDB();
 
     // Leer base de datos
-    $query = "SELECT id, titulo, imagen, precio FROM propiedades";
-    $propiedades = mysqli_query($db, $query);
+    $propiedades = Propiedad::all();
 
     // Si se pulsó el botón de Eliminar propiedad
     if($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -49,16 +50,16 @@
                 </tr>
             </thead>
             <tbody>
-                <?php while($propiedad = mysqli_fetch_assoc($propiedades)) {?>
+                <?php foreach($propiedades as $propiedad) {?>
                 <tr>
-                    <td> <?php echo $propiedad["id"] ?> </td>
-                    <td> <?php echo $propiedad["titulo"] ?> </td>
-                    <td> <img src="/images/<?php echo $propiedad["imagen"] ?>" alt="imagen propiedad"></td>
-                    <td> <?php echo $propiedad["precio"] ?>€ </td>
+                    <td> <?php echo $propiedad->id ?> </td>
+                    <td> <?php echo $propiedad->titulo ?> </td>
+                    <td> <img src="/images/<?php echo $propiedad->imagen ?>" alt="imagen propiedad"></td>
+                    <td> <?php echo $propiedad->precio ?>€ </td>
                     <td>
-                        <a href="/admin/propiedades/actualizar.php?id=<?php echo $propiedad["id"]?>" class="boton-amarillo-block">Actualizar</a>
+                        <a href="/admin/propiedades/actualizar.php?id=<?php echo $propiedad->id?>" class="boton-amarillo-block">Actualizar</a>
                         <form method="POST">
-                            <input type="hidden" name="id" value="<?php echo $propiedad["id"]; ?>">
+                            <input type="hidden" name="id" value="<?php echo $propiedad->id; ?>">
                             <button type="submit" class="boton-rojo-block w-100">Eliminar</a>
                         </form>
                     </td>

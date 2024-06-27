@@ -115,4 +115,39 @@ class Propiedad {
                 $this->imagen = $image;
             }
         }
+
+        public static function all() {
+            $query = "SELECT * FROM propiedades";
+            return self::consultarSQL($query);
+        }
+
+        public static function consultarSQL($query) {
+            // Consultar base de datos
+            $resultado = self::$db->query($query);
+
+            // Iterar los resultados
+            $array = [];
+            while($registro = $resultado->fetch_assoc()) {
+                $array[] = self::crearObjeto($registro);
+            }
+
+            // Liberar la memoria del query
+            $resultado->free();
+
+            // Devolver resultado
+            return $array;
+        }
+
+        protected static function crearObjeto($registro) : self {
+            $objeto = new self; // creamos objeto de la clase padre
+
+            // iteramos array asociativo como par clave-valor
+            foreach($registro as $key => $value) {
+                if(property_exists($objeto, $key)) {
+                    $objeto->$key = $value;
+                }
+            }
+
+            return $objeto;
+        }
 }
