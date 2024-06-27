@@ -128,7 +128,7 @@ class Propiedad {
             // Iterar los resultados
             $array = [];
             while($registro = $resultado->fetch_assoc()) {
-                $array[] = self::crearObjeto($registro);
+                $array[] = self::array2Propiedad($registro);
             }
 
             // Liberar la memoria del query
@@ -138,7 +138,7 @@ class Propiedad {
             return $array;
         }
 
-        protected static function crearObjeto($registro) : self {
+        protected static function array2Propiedad($registro) : self {
             $objeto = new self; // creamos objeto de la clase padre
 
             // iteramos array asociativo como par clave-valor
