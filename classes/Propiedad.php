@@ -121,6 +121,11 @@ class Propiedad {
             return self::consultarSQL($query);
         }
 
+        public static function find($id) {
+            $query = "SELECT * FROM propiedades WHERE id = $id";
+            return array_shift(self::consultarSQL($query)); // retornamos el unico objeto del array
+        }
+
         public static function consultarSQL($query) {
             // Consultar base de datos
             $resultado = self::$db->query($query);
@@ -149,5 +154,14 @@ class Propiedad {
             }
 
             return $objeto;
+        }
+
+        // Para sincronizar los campos mostrados con los introducidos por el usuario
+        public function sincronizar($args) {
+            foreach($args as $key => $value) {
+                if(property_exists($this, $key) && !is_null($value)) {
+                    $this->$key = $value;
+                }
+            }
         }
 }

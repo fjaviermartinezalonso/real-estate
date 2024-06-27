@@ -17,11 +17,11 @@
     // Procesado de datos enviados por el usuario
     if($_SERVER["REQUEST_METHOD"] === "POST") {
 
-        $propiedad = new Propiedad($_POST);
+        $propiedad = new Propiedad($_POST["propiedad"]);
 
         // Crear identificador unico para la imagen
-        $imagen = $_FILES["imagen"];
-        $imageExtension = ($imagen["type"] === "image/jpeg")? ".jpg" : ".png"; // solo permitimos subir estos dos formatos
+        $imagen = $_FILES["propiedad"]["tmp_name"]["imagen"];
+        $imageExtension = ($_FILES["propiedad"]["type"]["imagen"] === "image/jpeg")? ".jpg" : ".png"; // solo permitimos subir estos dos formatos
         $imageIdentifier = md5(uniqid(rand() , true)) . $imageExtension;
         $propiedad->setImage($imageIdentifier);
 
@@ -35,7 +35,7 @@
             }
             // Resize a la imagen con Intervention y subida al servidor
             $manager = new ImageManager(new Driver());
-            $image = $manager->read($_FILES["imagen"]["tmp_name"])->resize(800,600)->save(IMAGENES_URL . $imageIdentifier);
+            $image = $manager->read($_FILES["propiedad"]["tmp_name"]["imagen"])->resize(800,600)->save(IMAGENES_URL . $imageIdentifier);
 
             $exito = $propiedad->create();
             // Limpiamos campos antes de pintar mensaje de exito en verde
