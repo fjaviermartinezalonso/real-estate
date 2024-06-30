@@ -38,7 +38,7 @@ class Propiedad {
             $atributos = $this->sanitize($this->atributos());
 
             // Insertar en la base de datos
-            if(isset($this->id)) { // UPDATE
+            if(!is_null($this->id)) { // UPDATE
                 $sets = [];
                 foreach($atributos as $key => $value) {
                     $sets[] = "$key = '$value'";
@@ -141,7 +141,7 @@ class Propiedad {
 
         public function setImage($image) {
             // Elimina imagen previa si se esta actualizando (hay id)
-            if(isset($this->id)) {
+            if(is_null($this->id)) {
                 $this->deleteImage();
             }
 
