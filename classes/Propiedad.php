@@ -21,7 +21,7 @@ class Propiedad {
         public $vendedores_id;
 
         public function __construct($args = []) {
-            $this->id = $args["id"] ?? "";
+            $this->id = $args["id"] ?? null;
             $this->titulo = $args["titulo"] ?? "";
             $this->precio = $args["precio"] ?? "";
             $this->imagen = $args["imagen"] ?? "";
@@ -58,8 +58,25 @@ class Propiedad {
             }
         }
 
+        public function deleteImage() {
+            $url_imagen = IMAGENES_URL . $this->imagen;
+            if(file_exists($url_imagen)) {
+                unlink($url_imagen);
+            }
+        }
+
         public static function setDB($database) {
             self::$db = $database;
+        }
+
+        public function delete() {
+            $query = "DELETE FROM propiedades WHERE id = ";
+            $query .= self::$db->escape_string($this->id);
+            $query .= " LIMIT 1";
+            if(self::$db->query($query)) {
+                $this->deleteImage(); // Eliminar imagen asociada de la base de datos
+                header("location: /admin"); // si se logra recargamos página
+            }
         }
 
         public function atributos() : array {
@@ -125,10 +142,7 @@ class Propiedad {
         public function setImage($image) {
             // Elimina imagen previa si se esta actualizando (hay id)
             if(isset($this->id)) {
-                $url_imagen = IMAGENES_URL . $this->imagen;
-                if(file_exists($url_imagen)) {
-                    unlink($url_imagen);
-                }
+                $this->deleteImage();
             }
 
             if($image) {

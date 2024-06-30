@@ -23,8 +23,6 @@
 
     // Procesado de datos enviados por el usuario
     if($_SERVER["REQUEST_METHOD"] === "POST") {
-        debugVar($_FILES["propiedad"]);
-
         // Asignar los atributos que han cambiado
         $args = $_POST["propiedad"];
         $propiedad->sincronizar($args);

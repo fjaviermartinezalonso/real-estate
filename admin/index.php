@@ -15,19 +15,8 @@
         $id = filter_var($_POST["id"], FILTER_VALIDATE_INT);
 
         if($id) {
-            // Eliminar imagen asociada de la base de datos
-            $query = "SELECT imagen FROM propiedades WHERE id = $id";
-            $resultado = mysqli_query($db, $query);
-            $imagenDB = mysqli_fetch_assoc($resultado)["imagen"];
-
-            $imageFolder = "../images/";
-            unlink($imageFolder . $imagenDB);
-            
-            // Eliminar registro de la tabla
-            $query = "DELETE FROM propiedades WHERE id = $id";
-            if(mysqli_query($db, $query)) { // si se logra recargamos página
-                header("location: /admin");
-            }
+            $propiedad = Propiedad::find($id);
+            $propiedad->delete();
         }
     }
 
