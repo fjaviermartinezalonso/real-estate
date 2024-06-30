@@ -26,10 +26,7 @@
 
     <section class="seccion contenedor">
         <h2>Casas y apartamentos en venta</h2>
-        <?php 
-        $limite = 3;
-        require 'includes/templates/anuncios.php';
-        ?>
+        <?php require 'includes/templates/anuncios.php'; ?>
 
         <div class="alinear-derecha">
             <a href="/anuncios.php" class="boton-verde">Ver todo</a>
