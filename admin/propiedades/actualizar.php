@@ -2,6 +2,7 @@
     // Enviamos a la raíz si el admin no inició sesión
     require '../../includes/app.php';
     use App\Propiedad;
+    use App\Vendedor;
     use Intervention\Image\ImageManager;
     use Intervention\Image\Drivers\Imagick\Driver;
 
@@ -14,12 +15,9 @@
     }
 
     // Leer base de datos
+    $vendedores = Vendedor::all();
     $propiedad = Propiedad::find($id);
     $errores = Propiedad::getErrores();
-    
-    $db = conectarDB();
-    $query = "SELECT id, nombre, apellido FROM vendedores";
-    $vendedores = mysqli_query($db, $query);
 
     // Procesado de datos enviados por el usuario
     if($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -28,12 +26,13 @@
         $propiedad->sincronizar($args);
 
         // Crear identificador unico para la imagen
-        $imagen = $_FILES["propiedad"]["tmp_name"]["imagen"];
-        $imageExtension = ($_FILES["propiedad"]["type"]["imagen"] === "image/jpeg")? ".jpg" : ".png"; // solo permitimos subir estos dos formatos
-        $imageIdentifier = md5(uniqid(rand() , true)) . $imageExtension;
-        $imagenDB = $imageIdentifier; // para actualizar la imagen mas abajo
-        $propiedad->setImage($imageIdentifier);
-
+        if($_FILES["propiedad"]["tmp_name"]["imagen"]) {
+            $imageExtension = ($_FILES["propiedad"]["type"]["imagen"] === "image/jpeg")? ".jpg" : ".png"; // solo permitimos subir estos dos formatos
+            $imageIdentifier = md5(uniqid(rand() , true)) . $imageExtension;
+            $imagenDB = $imageIdentifier; // para actualizar la imagen mas abajo
+            $propiedad->setImage($imageIdentifier);
+        }
+        
         $propiedad->validarCampos();
         $errores = Propiedad::getErrores();
 

@@ -45,8 +45,12 @@
         <select name="propiedad[vendedores_id]" id="vendedores_id" value="<?php echo htmlspecialchars($propiedad->vendedores_id); ?>">
             <option value="" disabled selected>-- Seleccione --</option>
             
-            <?php while($row = mysqli_fetch_assoc($vendedores)) { ?>
-                <option <?php echo htmlspecialchars($propiedad->vendedores_id) === $row["id"]? "selected" : "" ?> value="<?php echo $row["id"]; ?>"> <?php echo $row["nombre"] . " " . $row["apellido"]; ?> </option>
+            <?php foreach($vendedores as $vendedor) { ?>
+                <option
+                    <?php echo(htmlspecialchars($propiedad->vendedores_id) === $vendedor->id? "selected" : "") ?>
+                    value="<?php echo htmlspecialchars($vendedor->id); ?>"> 
+                    <?php echo(htmlspecialchars($vendedor->nombre) . " " . htmlspecialchars($vendedor->apellido)); ?>                     
+                </option>
             <?php } ?>
             
         </select>

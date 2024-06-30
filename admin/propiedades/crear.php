@@ -2,16 +2,14 @@
     // Enviamos a la raíz si el admin no inició sesión
     require '../../includes/app.php';
     use App\Propiedad;
+    use App\Vendedor;
     use Intervention\Image\ImageManager;
     use Intervention\Image\Drivers\Imagick\Driver;
 
     autenticarUsuario();
-    $db = conectarDB();
 
     // Leer base de datos
-    $query = "SELECT id, nombre, apellido FROM vendedores";
-    $vendedores = mysqli_query($db, $query);
-
+    $vendedores = Vendedor::all();    
     $errores = Propiedad::getErrores();
 
     // Procesado de datos enviados por el usuario

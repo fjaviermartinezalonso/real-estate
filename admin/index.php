@@ -5,8 +5,6 @@
 
     autenticarUsuario();
     
-    $db = conectarDB();
-
     // Leer base de datos
     $propiedades = Propiedad::all();
 

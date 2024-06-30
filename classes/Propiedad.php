@@ -2,200 +2,82 @@
 
 namespace App;
 
-class Propiedad {
+class Propiedad extends ActiveRecord {
 
-        // Conexion con la base de datos. Estática para compartirla entre todos los objetos
-        protected static $db;
-        protected static $columnasDB = ["id", "titulo", "precio", "imagen", "descripcion", "habitaciones", "baños", "estacionamientos", "creado", "vendedores_id"];
-        protected static $errores = [];
+    protected static $columnasDB = [
+        "id", 
+        "titulo", 
+        "precio", 
+        "imagen", 
+        "descripcion", 
+        "habitaciones", 
+        "baños", 
+        "estacionamientos", 
+        "creado", 
+        "vendedores_id"
+    ];
+    protected static $tabla = "propiedades";
 
-        public $id;
-        public $titulo;
-        public $precio;
-        public $imagen;
-        public $descripcion;
-        public $habitaciones;
-        public $baños;
-        public $estacionamientos;
-        public $creado;
-        public $vendedores_id;
+    public $id;
+    public $titulo;
+    public $precio;
+    public $imagen;
+    public $descripcion;
+    public $habitaciones;
+    public $baños;
+    public $estacionamientos;
+    public $creado;
+    public $vendedores_id;
 
-        public function __construct($args = []) {
-            $this->id = $args["id"] ?? null;
-            $this->titulo = $args["titulo"] ?? "";
-            $this->precio = $args["precio"] ?? "";
-            $this->imagen = $args["imagen"] ?? "";
-            $this->descripcion = $args["descripcion"] ?? "";
-            $this->habitaciones = $args["habitaciones"] ?? "";
-            $this->baños = $args["baños"] ?? "";
-            $this->estacionamientos = $args["estacionamientos"] ?? "";
-            $this->creado = date("Y/m/d");
-            $this->vendedores_id = $args["vendedores_id"] ?? "";
+    public function __construct($args = []) {
+        $this->id = $args["id"] ?? null;
+        $this->titulo = $args["titulo"] ?? "";
+        $this->precio = $args["precio"] ?? "";
+        $this->imagen = $args["imagen"] ?? "";
+        $this->descripcion = $args["descripcion"] ?? "";
+        $this->habitaciones = $args["habitaciones"] ?? "";
+        $this->baños = $args["baños"] ?? "";
+        $this->estacionamientos = $args["estacionamientos"] ?? "";
+        $this->creado = date("Y/m/d");
+        $this->vendedores_id = $args["vendedores_id"] ?? "";
+    }
+
+    public function validarCampos() {
+        if(!$this->titulo) {
+            self::$errores[] = "Campo Título requerido";
         }
-
-        public function create() : bool {
-            // Sanitizar los datos
-            $atributos = $this->sanitize($this->atributos());
-
-            // Insertar en la base de datos
-            if(!is_null($this->id)) { // UPDATE
-                $sets = [];
-                foreach($atributos as $key => $value) {
-                    $sets[] = "$key = '$value'";
-                }
-                $query = "UPDATE propiedades SET ";
-                $query .= join(", ", $sets);
-                $query .= " WHERE id = '$this->id'";
-                return self::$db->query($query);
-            }
-            else { // CREATE
-                $query = "INSERT INTO propiedades (";
-                $query .= join(", ", array_keys($atributos));
-                $query .= ") VALUES ('";
-                $query .= join("', '", array_values($atributos));
-                $query .= "')";
-                return self::$db->query($query);
-            }
+        if(!$this->precio) {
+            self::$errores[] = "Campo Precio requerido";
         }
-
-        public function deleteImage() {
-            $url_imagen = IMAGENES_URL . $this->imagen;
-            if(file_exists($url_imagen)) {
-                unlink($url_imagen);
-            }
+        if(!$this->imagen) {
+            self::$errores[] = "Campo Imagen requerido";
         }
-
-        public static function setDB($database) {
-            self::$db = $database;
+        if(!$this->descripcion) {
+            self::$errores[] = "Campo Descripción requerido";
         }
-
-        public function delete() {
-            $query = "DELETE FROM propiedades WHERE id = ";
-            $query .= self::$db->escape_string($this->id);
-            $query .= " LIMIT 1";
-            if(self::$db->query($query)) {
-                $this->deleteImage(); // Eliminar imagen asociada de la base de datos
-                header("location: /admin"); // si se logra recargamos página
-            }
+        if(strlen($this->descripcion) < 50) {
+            self::$errores[] = "La descripción requiere al menos 50 caracteres";
         }
-
-        public function atributos() : array {
-            $atributos = [];
-            foreach(self::$columnasDB as $col) {
-                if($col === "id") continue;
-                $atributos[$col] = $this->$col;
-            }
-            return $atributos;
+        if(!$this->habitaciones) {
+            self::$errores[] = "Campo Habitaciones requerido";
         }
-
-        public function sanitize($atributos) : array {
-            $sanitizado = [];
-            foreach($atributos as $key => $value) {
-                $sanitizado[$key] = self::$db->escape_string($value);
-            }
-            return $sanitizado;
+        if(($this->habitaciones < 0) || ($this->habitaciones > 9)) {
+            self::$errores[] = "El rango válido de Habitaciones es de 1 a 9";
         }
-
-        public static function getErrores() {
-            return self::$errores;
+        if(!$this->baños) {
+            self::$errores[] = "Campo Baños requerido";
         }
-
-        public function validarCampos() {
-            if(!$this->titulo) {
-                self::$errores[] = "Campo Título requerido";
-            }
-            if(!$this->precio) {
-                self::$errores[] = "Campo Precio requerido";
-            }
-            if(!$this->imagen) {
-                self::$errores[] = "Campo Imagen requerido";
-            }
-            if(!$this->descripcion) {
-                self::$errores[] = "Campo Descripción requerido";
-            }
-            if(strlen($this->descripcion) < 50) {
-                self::$errores[] = "La descripción requiere al menos 50 caracteres";
-            }
-            if(!$this->habitaciones) {
-                self::$errores[] = "Campo Habitaciones requerido";
-            }
-            if(($this->habitaciones < 0) || ($this->habitaciones > 9)) {
-                self::$errores[] = "El rango válido de Habitaciones es de 1 a 9";
-            }
-            if(!$this->baños) {
-                self::$errores[] = "Campo Baños requerido";
-            }
-            if(($this->baños < 0) || ($this->baños > 9)) {
-                self::$errores[] = "El rango válido de Baños es de 1 a 9";
-            }
-            if(!$this->estacionamientos) {
-                self::$errores[] = "Campo Estacionamientos requerido";
-            }
-            if(($this->estacionamientos < 0) || ($this->estacionamientos > 9)) {
-                self::$errores[] = "El rango válido de Estacionamientos es de 1 a 9";
-            }
-            if(!$this->vendedores_id) {
-                self::$errores[] = "Campo Vendedor requerido";
-            }
+        if(($this->baños < 0) || ($this->baños > 9)) {
+            self::$errores[] = "El rango válido de Baños es de 1 a 9";
         }
-
-        public function setImage($image) {
-            // Elimina imagen previa si se esta actualizando (hay id)
-            if(is_null($this->id)) {
-                $this->deleteImage();
-            }
-
-            if($image) {
-                $this->imagen = $image;
-            }
+        if(!$this->estacionamientos) {
+            self::$errores[] = "Campo Estacionamientos requerido";
         }
-
-        public static function all() {
-            $query = "SELECT * FROM propiedades";
-            return self::consultarSQL($query);
+        if(($this->estacionamientos < 0) || ($this->estacionamientos > 9)) {
+            self::$errores[] = "El rango válido de Estacionamientos es de 1 a 9";
         }
-
-        public static function find($id) {
-            $query = "SELECT * FROM propiedades WHERE id = $id";
-            return array_shift(self::consultarSQL($query)); // retornamos el unico objeto del array
+        if(!$this->vendedores_id) {
+            self::$errores[] = "Campo Vendedor requerido";
         }
-
-        public static function consultarSQL($query) {
-            // Consultar base de datos
-            $resultado = self::$db->query($query);
-
-            // Iterar los resultados
-            $array = [];
-            while($registro = $resultado->fetch_assoc()) {
-                $array[] = self::array2Propiedad($registro);
-            }
-
-            // Liberar la memoria del query
-            $resultado->free();
-
-            // Devolver resultado
-            return $array;
-        }
-
-        protected static function array2Propiedad($registro) : self {
-            $objeto = new self; // creamos objeto de la clase padre
-
-            // iteramos array asociativo como par clave-valor
-            foreach($registro as $key => $value) {
-                if(property_exists($objeto, $key)) {
-                    $objeto->$key = $value;
-                }
-            }
-
-            return $objeto;
-        }
-
-        // Para sincronizar los campos mostrados con los introducidos por el usuario
-        public function sincronizar($args) {
-            foreach($args as $key => $value) {
-                if(property_exists($this, $key) && !is_null($value)) {
-                    $this->$key = $value;
-                }
-            }
-        }
+    }
 }
