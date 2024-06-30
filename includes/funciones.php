@@ -20,3 +20,9 @@ function debugVar($var) {
     var_dump($var);
     echo "</pre>";
 }
+
+function validarTipo($tipo) {
+    $tipos = ["vendedor", "propiedad"];
+
+    return in_array($tipo, $tipos);
+}
