@@ -104,6 +104,15 @@ class ActiveRecord {
             return self::consultarSQL($query);
         }
 
+        // Lee cierta cantidad de registros
+        public static function get($limit) {
+            $query = "SELECT * FROM ";
+            $query .= static::$tabla; // static utiliza la tabla de la clase que heredo, en contraparte con self que seria siempre esta (campo vacio)
+            $query .= " LIMIT ";
+            $query .= $limit;
+            return self::consultarSQL($query);
+        }
+
         public static function find($id) {
             $query = "SELECT * FROM ";
             $query .= static::$tabla;
