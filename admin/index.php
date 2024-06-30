@@ -69,6 +69,7 @@
         </table>
 
         <h2>Vendedores</h2>
+        <a href="/admin/vendedores/crear.php" class="boton boton-verde">Nuevo vendedor</a>
         <table class="propiedades">
             <thead>
                 <tr>
